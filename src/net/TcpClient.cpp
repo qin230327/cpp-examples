@@ -2,14 +2,14 @@
 // Created by qin on 2023/4/7.
 //
 
-#include "SocketClient.h"
+#include "TcpClient.h"
 #include <boost/asio.hpp>
 #include <iostream>
 
 namespace net {
     std::shared_ptr<std::vector<unsigned char>>
-    SocketClient::sendAndReceive(const std::string &ip, const unsigned short &port,
-                                 const std::vector<unsigned char> &bytes) {
+    TcpClient::sendAndReceive(const std::string &ip, const unsigned short &port,
+                              const std::vector<unsigned char> &bytes) {
         auto ptr = std::make_shared<std::vector<unsigned char>>();
         auto flag = false;
 

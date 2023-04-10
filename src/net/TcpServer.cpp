@@ -1,9 +1,9 @@
-#include "SocketServer.h"
+#include "TcpServer.h"
 #include <boost/asio.hpp>
 #include <iostream>
 
 namespace net {
-    std::shared_ptr<std::string> SocketServer::start(const unsigned short port, const std::string &rspToCli) {
+    std::shared_ptr<std::string> TcpServer::start(const unsigned short port, const std::string &rspToCli) {
         auto res = std::make_shared<std::string>();
         bool flag = false;
 
