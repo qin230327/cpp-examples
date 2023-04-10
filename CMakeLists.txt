@@ -7,4 +7,6 @@ set(CMAKE_CXX_STANDARD 11)
 add_library(cpp_examples
         src/net/SocketClient.cpp
         src/net/SocketClient.h
+        src/net/SocketServer.cpp
+        src/net/SocketServer.h
         )
