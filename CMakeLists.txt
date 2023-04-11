@@ -4,8 +4,14 @@ project(cpp_examples)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(C:/boost_1_81_0)
-link_libraries(C:/boost_1_81_0/stage/lib)
+find_package(Boost REQUIRED)
+if (${Boost_FOUND})
+message("found boost") 
+message("boost version: "${Boost_VERSION})
+message("boost include dirs: "${Boost_INCLUDE_DIRS})
+else()
+message("ERROR!!! CANNOT FIND BOOST.")
+endif()
 
 add_library(cpp_examples
         src/net/TcpClient.cpp
