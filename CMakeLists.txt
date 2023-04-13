@@ -25,14 +25,25 @@ project(cpp_examples)
 
 set(CMAKE_CXX_STANDARD 11)
 
-find_package(Boost REQUIRED)
+find_package(Boost)
 if (${Boost_FOUND})
-message("found boost") 
-message(boost_version:${Boost_VERSION})
-message(boost_include_dirs:${Boost_INCLUDE_DIRS})
+        message(STATUS "found boost") 
+        message(STATUS "Boost_VERSION:${Boost_VERSION}")
+        if ("${Boost_INCLUDE_DIRS}" STREQUAL "")
+                message("[ERROR] Boost_INCLUDE_DIRS is empty.")
+        else()
+                message(STATUS "Boost_INCLUDE_DIRS:${Boost_INCLUDE_DIRS}")
+        endif()
+        if ("${Boost_LIBRARY_DIRS}" STREQUAL "")
+                message("[ERROR] Boost_LIBRARY_DIRS is not defined")
+        else()
+                message(STATUS "Boost_LIBRARY_DIRS:${Boost_LIBRARY_DIRS}")
+        endif()
 else()
-message("ERROR!!! CANNOT FIND BOOST.")
+        message("[ERROR] CANNOT FIND BOOST.")
 endif()
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 add_library(cpp_examples
         src/net/TcpClient.cpp
@@ -40,3 +51,5 @@ add_library(cpp_examples
         src/net/TcpServer.cpp
         src/net/TcpServer.h
         )
+
+target_link_libraries(cpp_examples boost_system boost_thread pthread)
