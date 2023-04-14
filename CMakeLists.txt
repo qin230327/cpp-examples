@@ -46,10 +46,12 @@ include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 add_library(cpp_examples
+        src/net/SmtpSender.cpp
+        src/net/SmtpSender.h
         src/net/TcpClient.cpp
         src/net/TcpClient.h
         src/net/TcpServer.cpp
         src/net/TcpServer.h
         )
 
-target_link_libraries(cpp_examples boost_system boost_thread pthread)
+target_link_libraries(cpp_examples boost_system boost_thread pthread curl)
