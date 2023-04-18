@@ -52,6 +52,10 @@ add_library(cpp_examples
         src/net/TcpClient.h
         src/net/TcpServer.cpp
         src/net/TcpServer.h
+        src/net/UdpReceiver.cpp
+        src/net/UdpReceiver.h
+        src/net/UdpSender.cpp
+        src/net/UdpSender.h
         )
 
 target_link_libraries(cpp_examples boost_system boost_thread pthread curl)
