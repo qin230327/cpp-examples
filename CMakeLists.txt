@@ -45,7 +45,17 @@ endif()
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+if (WIN32)
+        set(ARP_SENDER_H "")
+        set(ARP_SENDER_CPP "")
+else ()
+        set(ARP_SENDER_H "src/net/ArpSender.h")
+        set(ARP_SENDER_CPP "src/net/ArpSender.cpp")
+endif()
+
 add_library(cpp_examples
+        ${ARP_SENDER_CPP}
+        ${ARP_SENDER_H}
         src/net/SmtpSender.cpp
         src/net/SmtpSender.h
         src/net/TcpClient.cpp
