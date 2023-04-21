@@ -16,9 +16,9 @@ bool ArpSender::broadcast(const std::array<uint8_t, ETH_ALEN> &srcMac,
     ArpPacket packet;
     memcpy(packet.etherDstHost, dstMac.data(), ETH_ALEN);
     memcpy(packet.etherSrcHost, srcMac.data(), ETH_ALEN);
-    packet.etherType = htons(0x0806);
+    packet.etherType = htons(ETH_P_ARP);
     packet.hardType = htons(0x01);
-    packet.protocolType = htons(0x0800);
+    packet.protocolType = htons(ETH_P_IP);
     packet.hardLen = ETH_ALEN;
     packet.protocolLen = 4;
     packet.op = htons(0x01);
