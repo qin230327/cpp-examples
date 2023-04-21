@@ -14,7 +14,8 @@ bool UdpSender::send(const std::string &msg, const std::uint16_t localPort,
         boost::asio::ip::udp::endpoint remoteEndpoint(
             boost::asio::ip::address::from_string(msg, errorCode), remotePort);
         boost::asio::ip::udp::socket socket(ioService, localEndpoint);
-        socket.send_to(boost::asio::buffer(msg), remoteEndpoint);
+        auto len = socket.send_to(boost::asio::buffer(msg), remoteEndpoint);
+        std::cout << "send " << len << " bytes successfully" << std::endl;
     } catch (std::exception &e) {
         std::cerr << "send message to socket error, exception message: "
                   << e.what() << std::endl;
