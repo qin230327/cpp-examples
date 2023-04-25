@@ -56,6 +56,8 @@ endif()
 add_library(cpp_examples
         ${ARP_SENDER_CPP}
         ${ARP_SENDER_H}
+        src/net/DnsSender.cpp
+        src/net/DnsSender.h
         src/net/SmtpSender.cpp
         src/net/SmtpSender.h
         src/net/TcpClient.cpp
