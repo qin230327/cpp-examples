@@ -44,4 +44,53 @@ UdpSender::send(const std::vector<std::uint8_t> &bytes,
     }
     return res;
 }
+
+std::shared_ptr<std::vector<std::uint8_t>>
+UdpSender::send(const std::vector<std::uint8_t> &bytes,
+                const std::string &remoteAddr, const std::uint16_t remotePort) {
+    auto res = std::make_shared<std::vector<std::uint8_t>>();
+    boost::asio::io_service ioService;
+    boost::system::error_code errorCode;
+    boost::asio::ip::udp::socket socket(ioService);
+
+    try {
+        boost::asio::ip::udp::endpoint remoteEndpoint(
+            boost::asio::ip::address::from_string(remoteAddr, errorCode),
+            remotePort);
+
+        socket.open(boost::asio::ip::udp::v4(), errorCode);
+
+        /// Try to find a available port
+        auto port = 1024;
+        for (; port < 65536; ++port) {
+            try {
+                socket.bind(boost::asio::ip::udp::endpoint(
+                    boost::asio::ip::udp::v4(), port));
+                std::cout << "bound local port: " << port << std::endl;
+                break;
+            } catch (std::exception &ignored) {
+            }
+        }
+        if (port >= 65536) {
+            throw "no available port";
+        }
+
+        auto len = socket.send_to(
+            boost::asio::buffer(bytes.data(), bytes.size()), remoteEndpoint);
+        std::cout << "send " << len << " bytes successfully" << std::endl;
+
+        std::uint8_t twoKB[2048] = {'\0'};
+        auto len2 =
+            socket.receive_from(boost::asio::buffer(twoKB), remoteEndpoint);
+        for (auto i = 0; i < len2; ++i) {
+            res->push_back(twoKB[i]);
+        }
+
+    } catch (std::exception &e) {
+        std::cerr << "send message to socket error, exception message: "
+                  << e.what() << std::endl;
+        std::cerr << boost::system::system_error(errorCode).what() << std::endl;
+    }
+    return res;
+}
 } // namespace net

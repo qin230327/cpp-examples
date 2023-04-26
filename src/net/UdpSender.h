@@ -16,6 +16,10 @@ class UdpSender {
     static std::shared_ptr<std::vector<std::uint8_t>>
     send(const std::vector<std::uint8_t> &bytes, const std::uint16_t localPort,
          const std::string &remoteAddr, const std::uint16_t remotePort);
+
+    static std::shared_ptr<std::vector<std::uint8_t>>
+    send(const std::vector<std::uint8_t> &bytes, const std::string &remoteAddr,
+         const std::uint16_t remotePort);
 };
 } // namespace net
 
