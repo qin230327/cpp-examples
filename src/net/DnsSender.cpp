@@ -10,8 +10,9 @@
 #include <random>
 
 namespace net {
-bool DnsSender::send(string domain, uint16_t localPort, string dnsIp,
-                     uint16_t dnsPort, bool queryRecur) {
+std::shared_ptr<std::vector<std::uint8_t>>
+DnsSender::send(string domain, uint16_t localPort, string dnsIp,
+                uint16_t dnsPort, bool queryRecur) {
 
     std::uint16_t transactionId = htons(genTranId());
     std::uint16_t flags =
@@ -50,9 +51,7 @@ bool DnsSender::send(string domain, uint16_t localPort, string dnsIp,
     for (auto i = 0; i < len; i++) {
         bytes.push_back(bytePtr[i]);
     }
-    UdpSender::send(bytes, localPort, dnsIp, dnsPort);
-
-    return true;
+    return UdpSender::send(bytes, localPort, dnsIp, dnsPort);
 }
 
 std::uint16_t DnsSender::genTranId() {

@@ -13,8 +13,9 @@ using std::vector;
 namespace net {
 class DnsSender {
   public:
-    static bool send(string domain, uint16_t localPort, string dnsIp,
-                     uint16_t dnsPort = 53, bool queryRecur = false);
+    static std::shared_ptr<std::vector<std::uint8_t>>
+    send(string domain, uint16_t localPort, string dnsIp, uint16_t dnsPort = 53,
+         bool queryRecur = false);
 
   private:
     static std::uint16_t genTranId();
