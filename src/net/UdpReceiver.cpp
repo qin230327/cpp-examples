@@ -13,10 +13,10 @@ std::shared_ptr<std::string> UdpReceiver::receive(const std::uint16_t port) {
         boost::asio::ip::udp::endpoint endpoint(boost::asio::ip::udp::v4(),
                                                 port);
         boost::asio::ip::udp::socket socket(ioService, endpoint);
-        char oneKB[1024] = {'\0'};
-        auto len = socket.receive_from(boost::asio::buffer(oneKB), endpoint);
+        std::uint8_t twoKB[2048] = {'\0'};
+        auto len = socket.receive_from(boost::asio::buffer(twoKB), endpoint);
         for (auto i = 0; i < len; ++i) {
-            res->push_back(oneKB[i]);
+            res->push_back(static_cast<char>(twoKB[i]));
         }
     } catch (std::exception &e) {
         std::cerr << "receive message to socket error, exception message: "
