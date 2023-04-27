@@ -19,60 +19,21 @@ TcpClient::sendAndReceive(const std::string &ip, const unsigned short &port,
     boost::asio::ip::tcp::socket socket(ioService);
     boost::system::error_code errorCode;
 
-    /*
-     * connect to a remote tcp endpoint
-     */
     try {
-        auto ipAddress = boost::asio::ip::address::from_string(ip);
-        boost::asio::ip::tcp::endpoint endpoint(ipAddress, port);
-        socket.connect(endpoint);
-    } catch (std::exception &e) {
-        std::cerr << "connect to " << ip << ":" << port
-                  << " error, exception message: " << e.what() << std::endl;
-    }
+        socket.connect(boost::asio::ip::tcp::endpoint(
+            boost::asio::ip::address::from_string(ip), port));
+        auto len1 = socket.write_some(boost::asio::buffer(bytes), errorCode);
+        std::cout << "write " << len1 << " bytes." << std::endl;
 
-    /*
-     * send
-     */
-    auto bytesBuf = boost::asio::buffer(bytes);
-    try {
-        auto len = socket.write_some(bytesBuf, errorCode);
-        std::cout << "write " << len << " bytes." << std::endl;
-    } catch (std::exception &e) {
-        std::cerr << "write message to socket error, exception message: "
-                  << e.what() << std::endl;
-        std::cerr << boost::system::system_error(errorCode).what() << std::endl;
-    }
-
-    /*
-     * block and receive
-     */
-    try {
-        unsigned char oneKB[1024];
-        while (true) {
-            auto len = socket.read_some(boost::asio::buffer(oneKB), errorCode);
-            if (len > 0) {
-                for (auto i = 0; i < len; i++) {
-                    ptr->push_back(oneKB[i]);
-                }
-            } else {
-                break;
-            }
+        unsigned char twoKB[2048];
+        auto len2 = socket.read_some(boost::asio::buffer(twoKB), errorCode);
+        for (auto i = 0; i < len2; i++) {
+            ptr->push_back(twoKB[i]);
         }
     } catch (std::exception &e) {
-        std::cerr << "read message from socket error, exception message: "
+        std::cerr << "write message to socket error or read message from "
+                     "socket error, exception message: "
                   << e.what() << std::endl;
-        std::cerr << boost::system::system_error(errorCode).what() << std::endl;
-    }
-
-    /*
-     * close socket
-     */
-    try {
-        socket.close();
-    } catch (std::exception &e) {
-        std::cerr << "close socket error, exception message: " << e.what()
-                  << std::endl;
         std::cerr << boost::system::system_error(errorCode).what() << std::endl;
     }
 

@@ -18,36 +18,25 @@ std::shared_ptr<std::string> TcpServer::start(const unsigned short port,
      * bind to a port, listen on it, and start to accept connections
      */
     try {
-        boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(),
-                                                port);
-        boost::asio::ip::tcp::acceptor acceptor(ioService, endpoint);
+        boost::asio::ip::tcp::acceptor acceptor(
+            ioService,
+            boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
         acceptor.accept(socket, errorCode);
     } catch (std::exception &e) {
         std::cerr << "accept error, exception message: " << e.what()
                   << std::endl;
         std::cerr << boost::system::system_error(errorCode).what() << std::endl;
+        return res;
     }
 
-    /*
-     * read
-     */
     try {
         boost::asio::streambuf streamBuf;
         boost::asio::read_until(socket, streamBuf, '\n', errorCode);
         res->append(boost::asio::buffer_cast<const char *>(streamBuf.data()));
-    } catch (std::exception &e) {
-        std::cerr << "read message from socket error, exception message: "
-                  << e.what() << std::endl;
-        std::cerr << boost::system::system_error(errorCode).what() << std::endl;
-    }
-
-    /*
-     * write
-     */
-    try {
         boost::asio::write(socket, boost::asio::buffer(rspToCli), errorCode);
     } catch (std::exception &e) {
-        std::cerr << "write message from socket error, exception message: "
+        std::cerr << "read message from socket error or write message to "
+                     "socket error, exception message: "
                   << e.what() << std::endl;
         std::cerr << boost::system::system_error(errorCode).what() << std::endl;
     }
