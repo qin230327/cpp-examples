@@ -3,7 +3,6 @@
 #include <cstring>
 #include <iostream>
 #include <net/if.h>
-#include <netpacket/packet.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -33,7 +32,17 @@ bool ArpSender::broadcast(const std::array<uint8_t, ETH_ALEN> &srcMac,
         return false;
     }
 
-    struct sockaddr_ll sll;
+    struct sockaddr_ll {
+        unsigned short int sll_family;
+        unsigned short int sll_protocol;
+        int sll_ifindex;
+        unsigned short int sll_hatype;
+        unsigned char sll_pkttype;
+        unsigned char sll_halen;
+        unsigned char sll_addr[8];
+    };
+
+    sockaddr_ll sll;
     memset(&sll, 0, sizeof(sll));
     sll.sll_family = AF_PACKET;
     sll.sll_ifindex = IFF_BROADCAST;
